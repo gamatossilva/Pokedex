@@ -13,6 +13,7 @@ import retrofit2.Response;
 
 public class PokemonBestLoader extends AsyncTaskLoader<List<PokeDetails>> {
     private int amount;
+    List<PokeDetails> mData;
     public PokemonBestLoader(Context context, int amount) {
         super(context);
         this.amount = amount;
@@ -20,7 +21,11 @@ public class PokemonBestLoader extends AsyncTaskLoader<List<PokeDetails>> {
 
     @Override
     protected void onStartLoading() {
-        forceLoad();
+        if (mData != null) {
+            deliverResult(mData);
+        } else {
+            forceLoad();
+        }
     }
 
     @Override
@@ -52,5 +57,11 @@ public class PokemonBestLoader extends AsyncTaskLoader<List<PokeDetails>> {
         }
         Log.d("POKEMON", "pomeons: " + pokemons);
         return pokemons;
+    }
+
+    @Override
+    public void deliverResult(List<PokeDetails> data) {
+        mData = data;
+        super.deliverResult(data);
     }
 }

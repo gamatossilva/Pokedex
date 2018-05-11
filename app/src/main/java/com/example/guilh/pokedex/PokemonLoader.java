@@ -13,6 +13,7 @@ import retrofit2.Response;
 
 public class PokemonLoader extends AsyncTaskLoader<List<Pokemon>> {
     private int offset;
+    List<Pokemon> mData;
 
     public PokemonLoader(Context context, int offset) {
         super(context);
@@ -21,7 +22,12 @@ public class PokemonLoader extends AsyncTaskLoader<List<Pokemon>> {
 
     @Override
     protected void onStartLoading() {
-        forceLoad();
+
+        if (mData != null) {
+            deliverResult(mData);
+        } else {
+            forceLoad();
+        }
     }
 
     @Override
@@ -51,5 +57,11 @@ public class PokemonLoader extends AsyncTaskLoader<List<Pokemon>> {
             e.printStackTrace();
         }
         return pokemons;
+    }
+
+    @Override
+    public void deliverResult(List<Pokemon> data) {
+        mData = data;
+        super.deliverResult(data);
     }
 }
